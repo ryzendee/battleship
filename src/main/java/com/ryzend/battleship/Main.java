@@ -9,6 +9,11 @@ import com.ryzend.battleship.reader.ShipReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Игра с двумя игроками
+По умолчанию размеры поля 10x10
+Для изменения размеров нужно прописать значения поля в конструктор GameField
+ */
 public class Main {
     public static void main(String[] args) {
         List<Integer> shipSizeList = List.of(4, 3, 3, 2, 2, 1, 1, 1);
