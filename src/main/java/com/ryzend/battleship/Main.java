@@ -32,7 +32,7 @@ public class Main {
         GameField gameField = new GameField();
         ShipReader shipReader = new ShipReader(System.in, shipSizeList);
 
-        while (shipReader.isShipSizeListEmpty()) {
+        while (!shipReader.isShipSizeListEmpty()) {
             gameFieldPrinter.print(gameField);
             placeShip(shipReader, gameField);
         }
