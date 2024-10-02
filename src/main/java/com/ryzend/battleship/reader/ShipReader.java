@@ -46,4 +46,12 @@ public class ShipReader extends AbstractReader<Ship> {
             System.out.println(i + ". Размер: " + shipSizeList.get(i));
         }
     }
+
+    public boolean isShipSizeListEmpty() {
+        return shipSizeList.isEmpty();
+    }
+
+    public void removeShipSize(Integer shipSize) {
+        shipSizeList.remove(shipSize);
+    }
 }
