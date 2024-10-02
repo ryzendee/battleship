@@ -8,10 +8,10 @@ public class GameField {
 
     private static final int DEFAULT_HEIGHT = 10;
     private static final int DEFAULT_WIDTH = 10;
+    private static final int ADJACENT_RADIUS = 1;
 
     private final Map<Coordinate, Ship> coordinateShipMap = new HashMap<>();
     private final Set<Coordinate> attackedCoordinates = new HashSet<>();
-
     private final int height;
     private final int width;
 
@@ -21,8 +21,7 @@ public class GameField {
     }
 
     public GameField() {
-        this.height = DEFAULT_HEIGHT;
-        this.width = DEFAULT_WIDTH;
+        this(DEFAULT_HEIGHT, DEFAULT_WIDTH);
     }
 
     public Map<Coordinate, Ship> getCoordinateShipMap() {
@@ -72,30 +71,19 @@ public class GameField {
     }
 
     public boolean hasShipOnCoordinate(Coordinate coordinate) {
-        return coordinateShipMap.get(coordinate) != null;
+        return coordinateShipMap.containsKey(coordinate);
     }
 
     public boolean isAllShipsSunk() {
-        for (Ship ship : coordinateShipMap.values()) {
-            if (!ship.isSunk()) {
-                return false;
-            }
-        }
-
-        return true;
+        return coordinateShipMap.values().stream().allMatch(Ship::isSunk);
     }
+
 
     private Set<Coordinate> calculateShipCoordinates(Ship ship) {
         Set<Coordinate> shipCoordinates = new HashSet<>();
-        for (int i = 0; i < ship.getSize(); i++) {
-            Coordinate shipHeadCoordinate = ship.getHeadCoordinate();
-            Coordinate shiftedCoordinate;
 
-            if (ship.getOrientation().equals(Orientation.HORIZONTAL)) {
-                shiftedCoordinate = shipHeadCoordinate.shift(i, 0);
-            } else {
-                shiftedCoordinate = shipHeadCoordinate.shift(0, i);
-            }
+        for (int i = 0; i < ship.getSize(); i++) {
+            Coordinate shiftedCoordinate = shiftCoordinate(ship.getHeadCoordinate(), ship.getOrientation(), i);
 
             if (!isCoordinateWithinBounds(shiftedCoordinate)) {
                 throw new IllegalArgumentException("Корабль выходит за пределы карты!");
@@ -111,21 +99,39 @@ public class GameField {
         return shipCoordinates;
     }
 
+    private Coordinate shiftCoordinate(Coordinate headCoordinate, Orientation orientation, int offset) {
+        if (orientation.equals(Orientation.HORIZONTAL)) {
+            return headCoordinate.shift(offset, 0);
+        } else {
+            return headCoordinate.shift(0, offset);
+        }
+    }
+
     private boolean isSafeToPlace(Coordinate coordinate) {
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                if (dx == 0 && dy == 0) {
+        for (int dx = -ADJACENT_RADIUS; dx <= ADJACENT_RADIUS; dx++) {
+            for (int dy = -ADJACENT_RADIUS; dy <= ADJACENT_RADIUS; dy++) {
+                if (isSelfCoordinate(dx, dy)) {
                     continue;
                 }
 
-                Coordinate adjacentCoordinate = coordinate.shift(dx, dy);
-
-                if (isCoordinateWithinBounds(adjacentCoordinate)) {
-                    if (hasShipOnCoordinate(adjacentCoordinate)) {
-                        return false;
-                    }
+                if (!isAdjacentCoordinateSafe(coordinate, dx, dy)) {
+                    return false;
                 }
             }
+        }
+
+        return true;
+    }
+
+    private boolean isSelfCoordinate(int dx, int dy) {
+        return dx == 0 && dy == 0;
+    }
+
+    private boolean isAdjacentCoordinateSafe(Coordinate coordinate, int dx, int dy) {
+        Coordinate adjacentCoordinate = coordinate.shift(dx, dy);
+
+        if (isCoordinateWithinBounds(adjacentCoordinate)) {
+            return !hasShipOnCoordinate(adjacentCoordinate);
         }
 
         return true;
