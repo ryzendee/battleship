@@ -40,7 +40,7 @@ public class GameFieldPrinter extends AbstractPrinter<GameField> {
     }
 
     private void printRow(GameField gameField, int y) {
-        System.out.print(y + "\t");  // для номера строки
+        System.out.print(y + "\t");
 
         for (int x = 0; x < gameField.getWidth(); x++) {
             Coordinate coordinate = new Coordinate(x, y);
