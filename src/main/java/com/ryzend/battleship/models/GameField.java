@@ -71,7 +71,7 @@ public class GameField {
         return attackedCoordinates.contains(coordinate);
     }
 
-    public boolean coordinateContainsShip(Coordinate coordinate) {
+    public boolean hasShipOnCoordinate(Coordinate coordinate) {
         return coordinateShipMap.get(coordinate) != null;
     }
 
@@ -121,7 +121,7 @@ public class GameField {
                 Coordinate adjacentCoordinate = coordinate.shift(dx, dy);
 
                 if (isCoordinateWithinBounds(adjacentCoordinate)) {
-                    if (coordinateContainsShip(adjacentCoordinate)) {
+                    if (hasShipOnCoordinate(adjacentCoordinate)) {
                         return false;
                     }
                 }

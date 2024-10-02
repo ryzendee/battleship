@@ -64,14 +64,14 @@ public class GameFieldPrinter extends AbstractPrinter<GameField> {
 
 
     private boolean containsShip(GameField gameField, Coordinate coordinate) {
-        return gameField.coordinateContainsShip(coordinate);
+        return gameField.hasShipOnCoordinate(coordinate);
     }
 
     private boolean isMissHit(GameField gameField, Coordinate coordinate) {
-        return gameField.isCoordinateAttacked(coordinate) && !gameField.coordinateContainsShip(coordinate);
+        return gameField.isCoordinateAttacked(coordinate) && !gameField.hasShipOnCoordinate(coordinate);
     }
 
     private boolean isShipHit(GameField gameField, Coordinate coordinate) {
-        return gameField.isCoordinateAttacked(coordinate) && gameField.coordinateContainsShip(coordinate);
+        return gameField.isCoordinateAttacked(coordinate) && gameField.hasShipOnCoordinate(coordinate);
     }
 }
