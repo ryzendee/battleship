@@ -27,24 +27,31 @@ public class Main {
     }
 
     private static Player initPlayer(GameFieldPrinter gameFieldPrinter, List<Integer> shipSizeList) {
-        PlayerInfoReader playerInfoReader = new PlayerInfoReader(System.in);
-        PlayerInfo playerInfo = playerInfoReader.read();
+        PlayerInfo playerInfo = readPlayerInfo();
 
         GameField gameField = new GameField();
         ShipReader shipReader = new ShipReader(System.in, shipSizeList);
-        while (!shipSizeList.isEmpty()) {
-            try {
-                gameFieldPrinter.print(gameField);
 
-                Ship ship = shipReader.read();
-                gameField.placeShip(ship);
-                shipSizeList.remove(Integer.valueOf(ship.getSize()));
-            } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
-                System.out.println(ex.getMessage());
-            }
+        while (shipReader.isShipSizeListEmpty()) {
+            gameFieldPrinter.print(gameField);
+            placeShip(shipReader, gameField);
         }
 
         return new Player(playerInfo, gameField);
     }
 
+    private static PlayerInfo readPlayerInfo() {
+        PlayerInfoReader playerInfoReader = new PlayerInfoReader(System.in);
+        return playerInfoReader.read();
+    }
+
+    private static void placeShip(ShipReader shipReader, GameField gameField) {
+        try {
+            Ship ship = shipReader.read();
+            gameField.placeShip(ship);
+            shipReader.removeShipSize(ship.getSize());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 }
