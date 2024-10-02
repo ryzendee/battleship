@@ -1,13 +1,21 @@
 package com.ryzend.battleship.models;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
-@Getter
-@ToString
-@RequiredArgsConstructor
 public class Player {
 
-    private final String name;
+    private final PlayerInfo playerInfo;
+    private final GameField gameField;
+
+    public Player(PlayerInfo playerInfo, GameField gameField) {
+        this.playerInfo = playerInfo;
+        this.gameField = gameField;
+    }
+
+    public PlayerInfo getPlayerInfo() {
+        return playerInfo;
+    }
+
+    public GameField getGameField() {
+        return gameField;
+    }
 }
