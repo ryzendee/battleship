@@ -3,6 +3,8 @@ package com.ryzend.battleship.models;
 import com.ryzend.battleship.printer.GameFieldPrinter;
 import com.ryzend.battleship.reader.AttackCoordinateReader;
 
+import java.util.InputMismatchException;
+
 public class BattleshipGame {
 
     private final Player firstPlayer;
@@ -38,17 +40,22 @@ public class BattleshipGame {
         displayOpponentField(opponentField);
 
         while (true) {
-            Coordinate coordinateToAttack = attackCoordinateReader.read();
+            try {
+                Coordinate coordinateToAttack = attackCoordinateReader.read();
 
-            if (!isCoordinateValid(coordinateToAttack, opponentField)) {
-                continue;
-            }
+                if (!isCoordinateValid(coordinateToAttack, opponentField)) {
+                    continue;
+                }
 
-            if (isAttackSuccessful(coordinateToAttack, opponentField)) {
-                System.out.println("Попадание!");
-            } else {
-                System.out.println("Промах");
-                break;
+                if (isAttackSuccessful(coordinateToAttack, opponentField)) {
+                    System.out.println("Попадание!");
+                } else {
+                    System.out.println("Промах");
+                    break;
+                }
+
+            } catch (InputMismatchException ex) {
+                System.out.println(ex.getMessage());
             }
         }
     }
